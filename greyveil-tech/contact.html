@@ -2,48 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Contact — Greyveil Tech</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{--bg:#050A0E;--surface:#0A1218;--border:#0F2A1A;--green:#00FF7F;--cyan:#00E5FF;--red:#FF2D55;--text:#C8D8C8;--muted: #B8CCBF;--grid:rgba(0,255,127,0.03);}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#050A0E;
+      --surface:#0A1218;
+      --border:rgba(255,255,255,0.07);
+      --text:#C8D8D0;
+      --muted:#4A6A5A;
+      --green:#00FF7F;
+      --cyan:#00E5FF;
+      --red:#FF3B5C;
+    }
     html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:18px;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
-    body::after{content:'';position:fixed;inset:0;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;}
-    nav,section,footer,.page-hero,.chat-widget{position:relative;z-index:2;}
+    body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;}
 
-    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(5,10,14,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);transform:translateY(0);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1),box-shadow 0.3s;}
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 4rem;display:flex;align-items:center;justify-content:space-between;transition:background 0.3s,backdrop-filter 0.3s,transform 0.35s;}
+    nav.nav-scrolled{background:rgba(5,10,14,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
     nav.nav-hidden{transform:translateY(-100%);}
-    nav.nav-scrolled{box-shadow:0 4px 30px rgba(0,0,0,0.5);}
     .logo{display:inline-flex;align-items:center;text-decoration:none;}
-    nav ul{display:flex;gap:2.5rem;list-style:none;}
-    nav ul a{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);text-decoration:none;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;}
+    nav ul{display:flex;gap:2rem;list-style:none;}
+    nav ul a{color:var(--muted);text-decoration:none;font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s;}
     nav ul a:hover,nav ul a.active{color:var(--green);}
-    .nav-cta{font-family:'DM Mono',monospace;font-size:0.78rem;padding:0.55rem 1.3rem;background:transparent;border:1px solid var(--green);color:var(--green);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s,box-shadow 0.2s;text-decoration:none;}
-    .nav-cta:hover{background:rgba(0,255,127,0.08);box-shadow:0 0 18px rgba(0,255,127,0.3);}
-    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:1px solid var(--border);padding:8px 10px;z-index:101;position:relative;}
-    .hamburger span{display:block;width:22px;height:2px;background:var(--green);transition:transform 0.3s,opacity 0.3s,width 0.3s;transform-origin:center;}
-    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-    .hamburger.open span:nth-child(2){opacity:0;width:0;}
-    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-    .mobile-menu{visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(5,10,14,0.98);backdrop-filter:blur(20px);z-index:99;padding:5rem 2rem 2rem;transform:translateY(-12px);transition:opacity 0.35s ease,transform 0.35s ease,visibility 0.35s;overflow-y:auto;}
-    .mobile-menu.open{visibility:visible;opacity:1;transform:translateY(0);}
-    .mobile-menu ul{list-style:none;display:flex;flex-direction:column;gap:0;}
-    .mobile-menu ul li{border-bottom:1px solid var(--border);}
-    .mobile-menu ul a{display:block;padding:1.1rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--muted);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s,padding-left 0.2s;}
-    .mobile-menu ul a::before{content:'> ';color:var(--border);transition:color 0.2s;}
-    .mobile-menu ul a:hover,.mobile-menu ul a.active{color:var(--green);padding-left:0.5rem;}
-    .mobile-menu ul a:hover::before,.mobile-menu ul a.active::before{color:var(--green);}
-    .mobile-menu .mobile-cta{display:block;margin-top:1.5rem;padding:0.9rem;text-align:center;background:var(--green);color:#050A0E;font-family:'DM Mono',monospace;font-size:0.82rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;width:100%;}
+    .nav-cta{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--bg);background:var(--green);padding:0.55rem 1.2rem;text-decoration:none;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);transition:box-shadow 0.2s;}
+    .nav-cta:hover{box-shadow:0 0 20px rgba(0,255,127,0.4);}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px;}
+    .hamburger span{display:block;width:22px;height:2px;background:var(--text);transition:all 0.3s;}
+    .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+    .mobile-menu{display:none;position:fixed;inset:0;background:var(--bg);z-index:99;padding:6rem 2rem 2rem;flex-direction:column;gap:2rem;}
+    .mobile-menu.open{display:flex;}
+    .mobile-menu ul{list-style:none;display:flex;flex-direction:column;gap:1.5rem;}
+    .mobile-menu ul a{font-family:'DM Mono',monospace;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;}
+    .mobile-cta{font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--green);border:1px solid rgba(0,255,127,0.3);padding:0.8rem 1.5rem;text-decoration:none;align-self:flex-start;}
 
-    .page-hero{padding:9rem 4rem 5rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-    .breadcrumb{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;}
-    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    /* ── PAGE HERO ── */
+    .page-hero{padding:10rem 4rem 5rem;border-bottom:1px solid var(--border);}
+    .breadcrumb{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;}
     .breadcrumb a:hover{color:var(--green);}
-    .breadcrumb span{color:var(--green);}
-    .section-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.8rem;}
+    .section-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.8rem;}
     .section-label::before{content:'// ';color:var(--muted);}
     h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5rem);color:#fff;line-height:1.0;margin-bottom:1.2rem;letter-spacing:0.04em;}
     h1 em{font-style:normal;color:var(--green);}
@@ -51,12 +56,18 @@
     h2 em{font-style:normal;color:var(--green);}
     .hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:560px;}
 
+    /* ── REVEAL ANIMATION ── */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+
+    /* ── CONTENT SECTION ── */
     .content-section{padding:5rem 4rem;}
 
-    /* MAIN GRID */
+    /* ── MAIN CONTACT GRID ── */
     .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:5rem;}
 
-    /* CONTACT FORM */
+    /* FORM PANEL */
     .form-panel{background:var(--surface);padding:3rem;}
     .form-panel h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:#fff;margin-bottom:0.5rem;}
     .form-panel .sub{font-size:0.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.6;}
@@ -71,15 +82,13 @@
     .form-submit{width:100%;padding:1rem;background:var(--green);color:#050A0E;border:none;font-family:'DM Mono',monospace;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:box-shadow 0.2s,transform 0.15s;margin-top:0.5rem;}
     .form-submit:hover{box-shadow:0 0 30px rgba(0,255,127,0.4);transform:translateY(-1px);}
     .form-notice{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:0.8rem;text-align:center;letter-spacing:0.06em;}
-
-    /* SUCCESS STATE */
     .form-success{display:none;text-align:center;padding:3rem 2rem;}
     .form-success .tick{font-size:3rem;margin-bottom:1rem;}
     .form-success h4{font-family:'Syne',sans-serif;font-weight:800;color:var(--green);font-size:1.2rem;margin-bottom:0.5rem;}
     .form-success p{font-size:0.88rem;color:var(--muted);line-height:1.7;}
 
     /* INFO PANEL */
-    .info-panel{background:#070D10;padding:3rem;display:flex;flex-direction:column;gap:0;}
+    .info-panel{background:#070D10;padding:3rem;display:flex;flex-direction:column;}
     .info-panel h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:#fff;margin-bottom:0.5rem;}
     .info-panel .sub{font-size:0.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.6;}
     .contact-item{padding:1.5rem 0;border-bottom:1px solid var(--border);display:flex;gap:1rem;align-items:flex-start;}
@@ -94,7 +103,7 @@
     @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.4;}}
     .badge-text{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--green);letter-spacing:0.08em;}
 
-    /* BOOK A CALL */
+    /* ── BOOK A CALL ── */
     .book-section{margin-bottom:5rem;}
     .book-grid{display:grid;grid-template-columns:1fr 2fr;gap:1px;background:var(--border);border:1px solid var(--border);}
     .book-info{background:var(--surface);padding:3rem 2.5rem;}
@@ -105,7 +114,7 @@
     .ct-item.selected,.ct-item:hover{border-color:rgba(0,255,127,0.3);background:rgba(0,255,127,0.04);}
     .ct-icon{font-size:1.1rem;}
     .ct-label{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--text);letter-spacing:0.06em;}
-    .ct-dur{font-size:0.7rem;color:var(--muted);}
+    .ct-dur{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);}
     .book-calendar{background:#070D10;padding:3rem 2.5rem;}
     .book-calendar h4{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;}
     .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1.5rem;}
@@ -120,16 +129,42 @@
     .time-slot:hover{border-color:rgba(0,229,255,0.3);color:var(--cyan);}
     .time-slot.selected{background:rgba(0,229,255,0.08);border-color:var(--cyan);color:var(--cyan);}
     .book-btn{width:100%;padding:0.9rem;background:transparent;border:1px solid var(--green);color:var(--green);font-family:'DM Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;}
-    .book-btn:hover{background:rgba(0,255,127,0.07);box-shadow:0 0 20px rgba(0,255,127,0.2);}
+    .book-btn:hover:not(:disabled){background:rgba(0,255,127,0.07);box-shadow:0 0 20px rgba(0,255,127,0.2);}
     .book-btn:disabled{opacity:0.35;cursor:not-allowed;}
 
-    footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    /* ── FAQ ── */
+    .faq-section{margin-bottom:5rem;}
+    .faq-intro{font-size:0.9rem;color:var(--muted);line-height:1.7;margin-bottom:2.5rem;max-width:520px;}
+    .faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);}
+    .faq-item{background:var(--surface);padding:2rem 2.5rem;cursor:pointer;transition:background 0.2s;}
+    .faq-item:hover{background:#0D1820;}
+    .faq-q{display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+    .faq-q span{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:#fff;line-height:1.4;}
+    .faq-icon{font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--green);flex-shrink:0;transition:transform 0.25s;}
+    .faq-item.open .faq-icon{transform:rotate(45deg);}
+    .faq-a{font-size:0.87rem;color:var(--muted);line-height:1.75;max-height:0;overflow:hidden;transition:max-height 0.4s ease,margin-top 0.3s ease;}
+    .faq-item.open .faq-a{max-height:300px;margin-top:1rem;}
+    .faq-a a{color:var(--green);text-decoration:none;}
+    .faq-a a:hover{text-decoration:underline;}
+
+    /* ── SOCIAL / TRUST STRIP ── */
+    .social-strip{margin-bottom:5rem;padding:3rem;background:var(--surface);border:1px solid var(--border);display:flex;flex-wrap:wrap;gap:2.5rem;align-items:center;justify-content:space-between;}
+    .social-strip-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem;}
+    .social-links{display:flex;gap:0.8rem;flex-wrap:wrap;}
+    .social-link{display:inline-flex;align-items:center;gap:0.5rem;padding:0.55rem 1rem;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:border-color 0.2s,color 0.2s,background 0.2s;}
+    .social-link:hover{border-color:rgba(0,255,127,0.35);color:var(--green);background:rgba(0,255,127,0.04);}
+    .trust-items{display:flex;flex-direction:column;gap:0.7rem;}
+    .trust-item{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.06em;display:flex;align-items:center;gap:0.5rem;}
+    .trust-item::before{content:'✓';color:var(--green);font-weight:700;}
+
+    /* ── FOOTER ── */
+    footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
     .footer-text{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);letter-spacing:0.08em;}
     .footer-links{display:flex;gap:1.5rem;}
     .footer-links a{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;transition:color 0.2s;}
     .footer-links a:hover{color:var(--green);}
 
-    /* LIVE CHAT WIDGET */
+    /* ── LIVE CHAT WIDGET ── */
     .chat-widget{position:fixed;bottom:2rem;right:2rem;z-index:200;}
     .chat-toggle{width:56px;height:56px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 24px rgba(0,255,127,0.35);transition:transform 0.2s,box-shadow 0.2s;position:relative;}
     .chat-toggle:hover{transform:scale(1.08);box-shadow:0 6px 32px rgba(0,255,127,0.5);}
@@ -143,34 +178,39 @@
     .chat-status{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--green);letter-spacing:0.06em;}
     .chat-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:0.2rem;transition:color 0.2s;}
     .chat-close:hover{color:var(--text);}
-    .chat-messages{flex:1;padding:1rem;display:flex;flex-direction:column;gap:0.8rem;max-height:260px;overflow-y:auto;}
-    .msg{max-width:85%;font-size:0.82rem;line-height:1.5;}
-    .msg.bot{align-self:flex-start;}
-    .msg.user{align-self:flex-end;}
-    .msg-bubble{padding:0.6rem 0.9rem;border-radius:2px;}
+    .chat-messages{padding:1rem;display:flex;flex-direction:column;gap:0.8rem;max-height:220px;overflow-y:auto;flex:1;}
+    .msg{display:flex;flex-direction:column;gap:0.2rem;}
+    .msg.user{align-items:flex-end;}
+    .msg.bot{align-items:flex-start;}
+    .msg-bubble{font-size:0.82rem;line-height:1.55;padding:0.6rem 0.9rem;max-width:85%;}
     .msg.bot .msg-bubble{background:#0A1820;color:var(--text);border:1px solid var(--border);}
-    .msg.user .msg-bubble{background:rgba(0,255,127,0.1);color:var(--text);border:1px solid rgba(0,255,127,0.2);}
-    .msg-time{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);margin-top:0.3rem;}
-    .msg.user .msg-time{text-align:right;}
-    .chat-options{padding:0.6rem 1rem;display:flex;flex-direction:column;gap:0.4rem;border-top:1px solid var(--border);}
-    .chat-option{background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.5rem 0.8rem;text-align:left;cursor:pointer;letter-spacing:0.05em;transition:all 0.15s;}
-    .chat-option:hover{border-color:rgba(0,255,127,0.3);color:var(--green);}
-    .chat-input-row{display:flex;border-top:1px solid var(--border);}
-    .chat-input{flex:1;background:#070D10;border:none;color:var(--text);font-family:'Syne',sans-serif;font-size:0.82rem;padding:0.8rem 1rem;outline:none;}
-    .chat-input::placeholder{color:var(--muted);}
-    .chat-send{background:none;border:none;border-left:1px solid var(--border);padding:0 1rem;color:var(--green);cursor:pointer;font-size:1rem;transition:background 0.2s;}
-    .chat-send:hover{background:rgba(0,255,127,0.07);}
+    .msg.user .msg-bubble{background:rgba(0,255,127,0.1);color:var(--green);border:1px solid rgba(0,255,127,0.2);}
+    .msg-time{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted);}
+    .chat-options{padding:0.5rem 1rem 1rem;display:flex;flex-direction:column;gap:0.4rem;}
+    .chat-opt{background:none;border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.06em;text-align:left;padding:0.55rem 0.8rem;cursor:pointer;transition:border-color 0.2s,color 0.2s,background 0.2s;}
+    .chat-opt:hover{border-color:rgba(0,255,127,0.3);color:var(--green);background:rgba(0,255,127,0.04);}
+    .chat-input-row{padding:0.75rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;}
+    .chat-input-row input{flex:1;background:#070D10;border:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-size:0.82rem;padding:0.5rem 0.8rem;outline:none;}
+    .chat-input-row input:focus{border-color:var(--green);}
+    .chat-send{background:var(--green);border:none;color:#050A0E;padding:0.5rem 0.9rem;cursor:pointer;font-size:0.9rem;transition:opacity 0.2s;}
+    .chat-send:hover{opacity:0.85;}
 
-    @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-    .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
-    .reveal.visible{opacity:1;transform:none;}
-
-    @media(max-width:900px){.contact-grid{grid-template-columns:1fr;}.book-grid{grid-template-columns:1fr;}}
-    @media(max-width:640px){nav{padding:1rem 1.5rem;}nav ul{display:none !important;}.nav-cta{display:none !important;}.hamburger{display:flex !important;}.page-hero,.content-section{padding-left:1.5rem;padding-right:1.5rem;}h1{font-size:2.8rem;}.form-row{grid-template-columns:1fr;}.time-slots{grid-template-columns:repeat(2,1fr);}.cal-grid{gap:2px;}.chat-box{width:290px;}footer{flex-direction:column;gap:1rem;text-align:center;}}
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      nav ul,.nav-cta{display:none;}
+      .hamburger{display:flex;}
+      nav{padding:1rem 1.5rem;}
+      .page-hero{padding:8rem 1.5rem 3rem;}
+      .content-section{padding:3rem 1.5rem;}
+      .contact-grid,.book-grid,.faq-grid{grid-template-columns:1fr;}
+      footer{flex-direction:column;align-items:flex-start;padding:2rem 1.5rem;}
+      .social-strip{flex-direction:column;align-items:flex-start;padding:2rem 1.5rem;}
+    }
   </style>
 </head>
 <body>
 
+<!-- ── NAV ── -->
 <nav>
   <a href="../index.html" class="logo">
     <svg width="170" height="38" viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -187,23 +227,27 @@
     <li><a href="services.html">Services</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="blog.html">Insights</a></li>
     <li><a href="contact.html" class="active">Contact</a></li>
   </ul>
   <a href="contact.html" class="nav-cta">Free Assessment</a>
   <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 
+<!-- ── MOBILE MENU ── -->
 <div class="mobile-menu">
   <ul>
     <li><a href="../index.html">Home</a></li>
     <li><a href="services.html">Services</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="blog.html">Insights</a></li>
     <li><a href="contact.html" class="active">Contact</a></li>
   </ul>
   <a href="contact.html" class="mobile-cta">Free Assessment →</a>
 </div>
 
+<!-- ── HERO ── -->
 <div class="page-hero" style="opacity:0;animation:fadeUp 0.7s 0.2s forwards;">
   <div class="breadcrumb"><a href="../index.html">Home</a> / <span>Contact</span></div>
   <p class="section-label">Get In Touch</p>
@@ -211,11 +255,11 @@
   <p class="hero-sub">Whether you need a quick quote, a free assessment, or just want to understand your risk exposure — we respond within 4 hours during business hours.</p>
 </div>
 
+<!-- ── MAIN CONTENT ── -->
 <section class="content-section">
 
-  <!-- CONTACT FORM + INFO -->
+  <!-- CONTACT FORM + INFO PANEL -->
   <div class="contact-grid reveal">
-
     <div class="form-panel">
       <h3>Send Us a Message</h3>
       <p class="sub">Tell us about your business and what you need. We'll get back to you with a tailored response — not a template.</p>
@@ -234,7 +278,7 @@
             <option>Penetration Testing</option>
             <option>SOC / Threat Monitoring</option>
             <option>Cloud Security Review</option>
-            <option>Compliance & Audit</option>
+            <option>Compliance &amp; Audit</option>
             <option>Incident Response</option>
             <option>General Enquiry</option>
           </select>
@@ -253,12 +297,33 @@
     <div class="info-panel">
       <h3>Direct Contact</h3>
       <p class="sub">Prefer to reach out directly? We're reachable across multiple channels — pick what works for you.</p>
-      <div class="contact-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone / WhatsApp</div><div class="ci-value"><a href="tel:+254700000000">+254 700 000 000</a></div></div></div>
-      <div class="contact-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-value"><a href="/cdn-cgi/l/email-protection#80e8e5ececefc0e7f2e5f9f6e5e9ecaef4e5e3e8"><span class="__cf_email__" data-cfemail="86eee3eaeae9c6e1f4e3fff0e3efeaa8f2e3e5ee">[email&#160;protected]</span></a></div></div></div>
-      <div class="contact-item"><div class="ci-icon">🚨</div><div><div class="ci-label">Incident Hotline (24/7)</div><div class="ci-value"><a href="tel:+254711000000" style="color:var(--red);">+254 711 000 000</a></div></div></div>
-      <div class="contact-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-value">Westlands, Nairobi, Kenya</div></div></div>
-      <div class="contact-item"><div class="ci-icon">🕐</div><div><div class="ci-label">Office Hours</div><div class="ci-value">Mon–Fri, 08:00–18:00 EAT<br><span style="font-size:0.8rem;color:var(--muted);">SOC monitoring is 24/7</span></div></div></div>
-      <div class="response-badge"><div class="badge-dot"></div><div class="badge-text">Average response time: &lt; 4 hours</div></div>
+      <div class="contact-item">
+        <div class="ci-icon">📞</div>
+        <div><div class="ci-label">Phone / WhatsApp</div><div class="ci-value"><a href="tel:+254700000000">+254 700 000 000</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">✉️</div>
+        <div><div class="ci-label">Email</div><div class="ci-value"><a href="mailto:hello@greyveiltech.com">hello@greyveiltech.com</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">🚨</div>
+        <div><div class="ci-label">Incident Hotline (24/7)</div><div class="ci-value"><a href="tel:+254711000000" style="color:var(--red);">+254 711 000 000</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">📍</div>
+        <div><div class="ci-label">Location</div><div class="ci-value">Westlands, Nairobi, Kenya</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">🕐</div>
+        <div>
+          <div class="ci-label">Office Hours</div>
+          <div class="ci-value">Mon–Fri, 08:00–18:00 EAT<br><span style="font-size:0.8rem;color:var(--muted);">SOC monitoring is 24/7</span></div>
+        </div>
+      </div>
+      <div class="response-badge">
+        <div class="badge-dot"></div>
+        <div class="badge-text">Average response time: &lt; 4 hours</div>
+      </div>
     </div>
   </div>
 
@@ -273,22 +338,22 @@
         <div class="call-type">
           <div class="ct-item selected" onclick="selectType(this)">
             <div class="ct-icon">📹</div>
-            <div><div class="ct-label">Video Call (Google Meet)</div><div class="ct-dur" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);">30 minutes</div></div>
+            <div><div class="ct-label">Video Call (Google Meet)</div><div class="ct-dur">30 minutes</div></div>
           </div>
           <div class="ct-item" onclick="selectType(this)">
             <div class="ct-icon">📞</div>
-            <div><div class="ct-label">Phone Call</div><div class="ct-dur" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);">30 minutes</div></div>
+            <div><div class="ct-label">Phone Call</div><div class="ct-dur">30 minutes</div></div>
           </div>
           <div class="ct-item" onclick="selectType(this)">
             <div class="ct-icon">🏢</div>
-            <div><div class="ct-label">In-Person (Nairobi)</div><div class="ct-dur" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);">60 minutes</div></div>
+            <div><div class="ct-label">In-Person (Nairobi)</div><div class="ct-dur">60 minutes</div></div>
           </div>
         </div>
       </div>
       <div class="book-calendar">
         <h4 id="cal-month">March 2026</h4>
         <div class="cal-grid" id="cal-grid"></div>
-        <div class="time-slots" id="time-slots">
+        <div class="time-slots">
           <div class="time-slot" onclick="selectSlot(this)">09:00 EAT</div>
           <div class="time-slot" onclick="selectSlot(this)">10:00 EAT</div>
           <div class="time-slot" onclick="selectSlot(this)">11:00 EAT</div>
@@ -296,27 +361,93 @@
           <div class="time-slot" onclick="selectSlot(this)">15:00 EAT</div>
           <div class="time-slot" onclick="selectSlot(this)">16:00 EAT</div>
         </div>
-        <button class="book-btn" id="book-btn" disabled onclick="confirmBooking()">Select a date & time to continue</button>
+        <button class="book-btn" id="book-btn" disabled onclick="confirmBooking()">Select a date &amp; time to continue</button>
       </div>
+    </div>
+  </div>
+
+  <!-- FAQ SECTION -->
+  <div class="faq-section reveal">
+    <p class="section-label">Common Questions</p>
+    <h2>Before You <em>Reach Out</em></h2>
+    <p class="faq-intro">Here are the questions we hear most often. If yours isn't here, just send us a message — we reply to everything.</p>
+    <div class="faq-grid">
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>How quickly can you respond to an active incident?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a">For active incidents, call our 24/7 hotline at <a href="tel:+254711000000">+254 711 000 000</a>. We have an engineer engaged within 10 minutes and remote containment begins immediately. Do not shut down any systems before speaking to us — this preserves forensic evidence critical to the investigation.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>What does the free security assessment include?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a">Our free 15-minute assessment covers a high-level review of your attack surface, public-facing assets, and known vulnerability exposure. You'll receive a written summary of your top 3 risk areas within 48 hours — no commitment required.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>Do you work with small businesses or only enterprises?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a">We work with businesses of all sizes across East Africa. Our pricing is tiered — from focused SME packages starting at KES 85,000 to full enterprise SOC deployments. Every engagement is scoped to your actual needs, not a one-size-fits-all template.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>How long does a penetration test take?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a">Scope determines duration. A focused web application pentest typically takes 3–5 business days. A full network + infrastructure assessment for a mid-sized organisation runs 7–14 days. We provide a detailed timeline in your scoping proposal before any work begins.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>Are you compliant with Kenya's Data Protection Act?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes. All our engagements are conducted within the framework of the Kenya Data Protection Act 2019, and we assist clients in achieving and maintaining DPA compliance. We also support ISO 27001, PCI-DSS, and SOC 2 readiness across our service lines.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><span>Can you work with clients outside Nairobi?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a">Absolutely. Our SOC monitoring, cloud security reviews, and most assessment work is delivered remotely — covering clients across Kenya, East Africa, and beyond. For on-site engagements, our team travels to Nairobi and major regional cities as part of the scope.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SOCIAL / TRUST STRIP -->
+  <div class="social-strip reveal">
+    <div>
+      <div class="social-strip-label">Find Us Online</div>
+      <div class="social-links">
+        <a href="#" class="social-link">🔗 LinkedIn</a>
+        <a href="#" class="social-link">🐦 Twitter / X</a>
+        <a href="#" class="social-link">💬 WhatsApp</a>
+        <a href="#" class="social-link">📸 Instagram</a>
+      </div>
+    </div>
+    <div class="trust-items">
+      <div class="trust-item">Kenya Data Protection Act 2019 Compliant</div>
+      <div class="trust-item">ISO 27001 Aligned Methodology</div>
+      <div class="trust-item">24/7 SOC Monitoring &amp; Incident Response</div>
+      <div class="trust-item">Nairobi Based · Pan-Africa Reach</div>
     </div>
   </div>
 
 </section>
 
+<!-- ── FOOTER ── -->
 <footer>
   <a href="../index.html" style="display:inline-flex;align-items:center;text-decoration:none;">
     <svg width="140" height="32" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M8 2 L16 0 L16 11 C16 17 12 21 8 23 C4 21 0 17 0 11 L0 0 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1"/>
       <path d="M3 7 L3 16 L10 16 L10 12 L7 12" stroke="#00FF7F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <line x1="2" y1="9" x2="14" y2="9" stroke="#00E5FF" stroke-width="0.5" opacity="0.45"/>
       <text x="22" y="15" font-family="Syne,sans-serif" font-weight="900" font-size="11" fill="#ffffff" letter-spacing="0.5">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
       <text x="23" y="26" font-family="DM Mono,monospace" font-size="6" fill="#00E5FF" letter-spacing="4">TECH</text>
     </svg>
   </a>
   <div class="footer-text">© 2025 Greyveil Tech Ltd. Nairobi, Kenya.</div>
-  <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">LinkedIn</a></div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">LinkedIn</a>
+    <a href="contact.html">Contact</a>
+  </div>
 </footer>
 
-<!-- LIVE CHAT WIDGET -->
+<!-- ── LIVE CHAT WIDGET ── -->
 <div class="chat-widget">
   <div class="chat-box" id="chat-box">
     <div class="chat-header">
@@ -327,36 +458,67 @@
       <button class="chat-close" onclick="toggleChat()">✕</button>
     </div>
     <div class="chat-messages" id="chat-messages">
-      <div class="msg bot"><div class="msg-bubble">Hey 👋 Welcome to Greyveil Tech. How can we help you today?</div><div class="msg-time">Just now</div></div>
+      <div class="msg bot">
+        <div class="msg-bubble">Hey 👋 Welcome to Greyveil Tech. How can we help you today?</div>
+        <div class="msg-time">Now</div>
+      </div>
     </div>
     <div class="chat-options" id="chat-options">
-      <button class="chat-option" onclick="chatOption('pricing')">💰 Get a pricing quote</button>
-      <button class="chat-option" onclick="chatOption('assessment')">🔍 Request free assessment</button>
-      <button class="chat-option" onclick="chatOption('incident')">🚨 I have an active incident</button>
-      <button class="chat-option" onclick="chatOption('other')">💬 Something else</button>
+      <button class="chat-opt" onclick="chatOption('pricing')">💰 I want a pricing quote</button>
+      <button class="chat-opt" onclick="chatOption('assessment')">🔍 I'd like a free assessment</button>
+      <button class="chat-opt" onclick="chatOption('incident')">🚨 I have an active incident</button>
+      <button class="chat-opt" onclick="chatOption('other')">💬 I have another question</button>
     </div>
     <div class="chat-input-row">
-      <input class="chat-input" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()"/>
-      <button class="chat-send" onclick="sendChat()">➤</button>
+      <input type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()"/>
+      <button class="chat-send" onclick="sendChat()">→</button>
     </div>
   </div>
-  <button class="chat-toggle" onclick="toggleChat()" id="chat-toggle-btn">
+  <button class="chat-toggle" onclick="toggleChat()">
     <span id="chat-icon">💬</span>
     <div class="chat-badge" id="chat-badge"></div>
   </button>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // ── SCROLL REVEAL ──
-  const reveals=document.querySelectorAll('.reveal');
-  const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.1});
-  reveals.forEach(r=>obs.observe(r));
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
 
-  // ── NAV ──
-  (function(){const nav=document.querySelector('nav');let lastY=0,ticking=false,hideTimer=null;function hs(){const y=window.scrollY;if(y>lastY&&y>80)nav.classList.add('nav-hidden');else nav.classList.remove('nav-hidden');nav.classList.toggle('nav-scrolled',y>10);lastY=y;clearTimeout(hideTimer);hideTimer=setTimeout(()=>nav.classList.remove('nav-hidden'),1200);}window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(()=>{hs();ticking=false;});ticking=true;}},{passive:true});})();
+  // ── NAV HIDE ON SCROLL ──
+  (function(){
+    const nav = document.querySelector('nav');
+    let lastY = 0, ticking = false, hideTimer = null;
+    function hs() {
+      const y = window.scrollY;
+      if (y > lastY && y > 80) nav.classList.add('nav-hidden');
+      else nav.classList.remove('nav-hidden');
+      nav.classList.toggle('nav-scrolled', y > 10);
+      lastY = y;
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => nav.classList.remove('nav-hidden'), 1200);
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(() => { hs(); ticking = false; }); ticking = true; }
+    }, { passive: true });
+  })();
 
   // ── HAMBURGER ──
-  (function(){const h=document.querySelector('.hamburger'),m=document.querySelector('.mobile-menu');if(!h||!m)return;h.addEventListener('click',()=>{h.classList.toggle('open');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';});m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{h.classList.remove('open');m.classList.remove('open');document.body.style.overflow='';}));})();
+  (function(){
+    const h = document.querySelector('.hamburger'), m = document.querySelector('.mobile-menu');
+    if (!h || !m) return;
+    h.addEventListener('click', () => {
+      h.classList.toggle('open');
+      m.classList.toggle('open');
+      document.body.style.overflow = m.classList.contains('open') ? 'hidden' : '';
+    });
+    m.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      h.classList.remove('open'); m.classList.remove('open'); document.body.style.overflow = '';
+    }));
+  })();
 
   // ── CONTACT FORM ──
   function submitForm() {
@@ -364,102 +526,124 @@
     var valid = true;
     fields.forEach(function(id) {
       var el = document.getElementById(id);
-      if (!el.value.trim()) { el.style.borderColor='var(--red)'; valid=false; }
-      else el.style.borderColor='';
+      if (!el.value.trim()) { el.style.borderColor = 'var(--red)'; valid = false; }
+      else el.style.borderColor = '';
     });
     if (!valid) return;
-    document.getElementById('contact-form').style.display='none';
-    document.getElementById('form-success').style.display='block';
+    document.getElementById('contact-form').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
   }
 
   // ── CALL TYPE SELECT ──
   function selectType(el) {
-    document.querySelectorAll('.ct-item').forEach(function(i){i.classList.remove('selected');});
+    document.querySelectorAll('.ct-item').forEach(i => i.classList.remove('selected'));
     el.classList.add('selected');
   }
 
   // ── CALENDAR ──
   (function(){
-    var days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
-    var grid=document.getElementById('cal-grid');
-    var today=new Date();
-    var y=today.getFullYear(),mo=today.getMonth();
-    var first=new Date(y,mo,1).getDay();
-    var total=new Date(y,mo+1,0).getDate();
-    days.forEach(function(d){var el=document.createElement('div');el.className='cal-day-label';el.textContent=d;grid.appendChild(el);});
-    for(var i=0;i<first;i++){var el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el);}
-    for(var d=1;d<=total;d++){
-      var el=document.createElement('div');
-      el.className='cal-day'+(d<today.getDate()?' past':' available');
-      el.textContent=d;
-      if(d>=today.getDate()){el.onclick=function(){selectDay(this);};}
+    var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    var grid = document.getElementById('cal-grid');
+    var today = new Date();
+    var y = today.getFullYear(), mo = today.getMonth();
+    var first = new Date(y, mo, 1).getDay();
+    var total = new Date(y, mo + 1, 0).getDate();
+    days.forEach(function(d) {
+      var el = document.createElement('div'); el.className = 'cal-day-label'; el.textContent = d; grid.appendChild(el);
+    });
+    for (var i = 0; i < first; i++) {
+      var el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+    }
+    for (var d = 1; d <= total; d++) {
+      var el = document.createElement('div');
+      el.className = 'cal-day' + (d < today.getDate() ? ' past' : ' available');
+      el.textContent = d;
+      if (d >= today.getDate()) { el.onclick = function(){ selectDay(this); }; }
       grid.appendChild(el);
     }
   })();
 
-  var selectedDay=null,selectedTime=null;
-  function selectDay(el){
-    document.querySelectorAll('.cal-day').forEach(function(d){d.classList.remove('selected');});
+  var selectedDay = null, selectedTime = null;
+  function selectDay(el) {
+    document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
     el.classList.add('selected');
-    selectedDay=el.textContent;
+    selectedDay = el.textContent;
     checkBooking();
   }
-  function selectSlot(el){
-    document.querySelectorAll('.time-slot').forEach(function(s){s.classList.remove('selected');});
+  function selectSlot(el) {
+    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
     el.classList.add('selected');
-    selectedTime=el.textContent;
+    selectedTime = el.textContent;
     checkBooking();
   }
-  function checkBooking(){
-    var btn=document.getElementById('book-btn');
-    if(selectedDay&&selectedTime){btn.disabled=false;btn.textContent='Confirm — March '+selectedDay+' at '+selectedTime;}
-    else btn.textContent='Select a date & time to continue';
+  function checkBooking() {
+    var btn = document.getElementById('book-btn');
+    if (selectedDay && selectedTime) {
+      btn.disabled = false;
+      btn.textContent = 'Confirm — March ' + selectedDay + ' at ' + selectedTime;
+    } else {
+      btn.textContent = 'Select a date & time to continue';
+    }
   }
-  function confirmBooking(){
-    var btn=document.getElementById('book-btn');
-    btn.textContent='✓ Booked! Check your email for confirmation.';
-    btn.style.background='rgba(0,255,127,0.1)';
-    btn.style.color='var(--green)';
-    btn.style.border='1px solid rgba(0,255,127,0.3)';
-    btn.disabled=true;
-  }
-
-  // ── CHAT ──
-  var chatOpen=false;
-  function toggleChat(){
-    chatOpen=!chatOpen;
-    document.getElementById('chat-box').classList.toggle('open',chatOpen);
-    document.getElementById('chat-icon').textContent=chatOpen?'✕':'💬';
-    document.getElementById('chat-badge').style.display=chatOpen?'none':'block';
+  function confirmBooking() {
+    var btn = document.getElementById('book-btn');
+    btn.textContent = '✓ Booked! Check your email for confirmation.';
+    btn.style.background = 'rgba(0,255,127,0.1)';
+    btn.style.color = 'var(--green)';
+    btn.style.border = '1px solid rgba(0,255,127,0.3)';
+    btn.disabled = true;
   }
 
-  var chatResponses={
-    pricing: {user:'I want a pricing quote',bot:'Great! Pricing at Greyveil Tech is fully custom based on your scope. The fastest way to get a quote is to fill in the contact form above — we\'ll have a proposal to you within 72 hours. Want me to open it for you?'},
-    assessment: {user:'I\'d like a free assessment',bot:'Perfect. Our free assessment takes 15 minutes and identifies your top 3 risks at no charge, no obligation. Fill in the contact form above and select "Free Security Assessment" — we\'ll reach out within 4 hours.'},
-    incident: {user:'I have an active incident 🚨',bot:'Call our 24/7 incident hotline immediately: +254 711 000 000. Do not shut down any systems until you speak to our team — this preserves forensic evidence. We\'ll have an engineer on your case within 10 minutes.'},
-    other: {user:'I have another question',bot:'No problem — type your question below and a member of our team will respond shortly. For urgent matters, call +254 700 000 000.'},
+  // ── FAQ ACCORDION ──
+  function toggleFaq(el) {
+    var isOpen = el.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) el.classList.add('open');
+  }
+
+  // ── LIVE CHAT ──
+  var chatOpen = false;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById('chat-box').classList.toggle('open', chatOpen);
+    document.getElementById('chat-icon').textContent = chatOpen ? '✕' : '💬';
+    document.getElementById('chat-badge').style.display = chatOpen ? 'none' : 'block';
+  }
+
+  var chatResponses = {
+    pricing: { user: 'I want a pricing quote', bot: 'Pricing at Greyveil Tech is fully custom based on your scope. Fill in the contact form above and select your service — we\'ll have a proposal to you within 72 hours.' },
+    assessment: { user: 'I\'d like a free assessment', bot: 'Our free assessment takes 15 minutes and identifies your top 3 risks at no charge, no obligation. Fill in the contact form and select "Free Security Assessment" — we\'ll reach out within 4 hours.' },
+    incident: { user: 'I have an active incident 🚨', bot: 'Call our 24/7 incident hotline immediately: +254 711 000 000. Do NOT shut down any systems before speaking to us — this preserves forensic evidence. We\'ll have an engineer on your case within 10 minutes.' },
+    other: { user: 'I have another question', bot: 'No problem — type your question below and a member of our team will respond shortly. For urgent matters, call +254 700 000 000.' },
   };
 
-  function chatOption(key){
-    var r=chatResponses[key];
-    addMsg(r.user,'user');
-    document.getElementById('chat-options').style.display='none';
-    setTimeout(function(){addMsg(r.bot,'bot');},600);
+  function chatOption(key) {
+    var r = chatResponses[key];
+    addMsg(r.user, 'user');
+    document.getElementById('chat-options').style.display = 'none';
+    setTimeout(function(){ addMsg(r.bot, 'bot'); }, 600);
   }
 
-  function addMsg(text,type){
-    var msgs=document.getElementById('chat-messages');
-    var msg=document.createElement('div');msg.className='msg '+type;
-    var now=new Date();var time=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
-    msg.innerHTML='<div class="msg-bubble">'+text+'</div><div class="msg-time">'+time+'</div>';
+  function addMsg(text, type) {
+    var msgs = document.getElementById('chat-messages');
+    var msg = document.createElement('div'); msg.className = 'msg ' + type;
+    var now = new Date();
+    var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+    msg.innerHTML = '<div class="msg-bubble">' + text + '</div><div class="msg-time">' + time + '</div>';
     msgs.appendChild(msg);
-    msgs.scrollTop=msgs.scrollHeight;
+    msgs.scrollTop = msgs.scrollHeight;
   }
 
-  function sendChat(){
-    var input=document.getElementById('chat-input');
-    var text=input.value.trim();
-    if(!text)return;
-    addMsg(text,'user');
-    input.value='';
-    setTimeout(function(){addMsg('Thanks for your message. A member of our team will respond shortly. For urge
+  function sendChat() {
+    var input = document.getElementById('chat-input');
+    var text = input.value.trim();
+    if (!text) return;
+    addMsg(text, 'user');
+    input.value = '';
+    setTimeout(function(){
+      addMsg('Thanks for your message. A member of our team will respond shortly. For urgent security matters, call +254 700 000 000.', 'bot');
+    }, 800);
+  }
+</script>
+</body>
+</html>
