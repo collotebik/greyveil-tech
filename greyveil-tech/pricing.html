@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing — Greyveil Tech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#050A0E;--surface:#0A1218;--border:#0F2A1A;--green:#00FF7F;--cyan:#00E5FF;--red:#FF2D55;--text:#C8D8C8;--muted: #B8CCBF;--grid:rgba(0,255,127,0.03);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:18px;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    body::after{content:'';position:fixed;inset:0;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;}
+    nav,section,footer,.page-hero{position:relative;z-index:2;}
+
+    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 4rem;background:rgba(5,10,14,0.92);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);transform:translateY(0);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1),box-shadow 0.3s;}
+    nav.nav-hidden{transform:translateY(-100%);}
+    nav.nav-scrolled{box-shadow:0 4px 30px rgba(0,0,0,0.5);}
+    .logo{display:inline-flex;align-items:center;text-decoration:none;}
+    nav ul{display:flex;gap:2.5rem;list-style:none;}
+    nav ul a{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);text-decoration:none;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;}
+    nav ul a:hover,nav ul a.active{color:var(--green);}
+    .nav-cta{font-family:'DM Mono',monospace;font-size:0.78rem;padding:0.55rem 1.3rem;background:transparent;border:1px solid var(--green);color:var(--green);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s,box-shadow 0.2s;text-decoration:none;}
+    .nav-cta:hover{background:rgba(0,255,127,0.08);box-shadow:0 0 18px rgba(0,255,127,0.3);}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:1px solid var(--border);padding:8px 10px;z-index:101;position:relative;}
+    .hamburger span{display:block;width:22px;height:2px;background:var(--green);transition:transform 0.3s,opacity 0.3s,width 0.3s;transform-origin:center;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;width:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(5,10,14,0.98);backdrop-filter:blur(20px);z-index:99;padding:5rem 2rem 2rem;transform:translateY(-12px);transition:opacity 0.35s ease,transform 0.35s ease,visibility 0.35s;overflow-y:auto;}
+    .mobile-menu.open{visibility:visible;opacity:1;transform:translateY(0);}
+    .mobile-menu ul{list-style:none;display:flex;flex-direction:column;gap:0;}
+    .mobile-menu ul li{border-bottom:1px solid var(--border);}
+    .mobile-menu ul a{display:block;padding:1.1rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--muted);text-decoration:none;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.2s,padding-left 0.2s;}
+    .mobile-menu ul a::before{content:'> ';color:var(--border);transition:color 0.2s;}
+    .mobile-menu ul a:hover,.mobile-menu ul a.active{color:var(--green);padding-left:0.5rem;}
+    .mobile-menu ul a:hover::before,.mobile-menu ul a.active::before{color:var(--green);}
+    .mobile-menu .mobile-cta{display:block;margin-top:1.5rem;padding:0.9rem;text-align:center;background:var(--green);color:#050A0E;font-family:'DM Mono',monospace;font-size:0.82rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;width:100%;}
+
+    .page-hero{padding:9rem 4rem 5rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .page-hero::before{content:'';position:absolute;right:-100px;top:50%;transform:translateY(-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(0,255,127,0.04) 0%,transparent 70%);pointer-events:none;}
+    .breadcrumb{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .breadcrumb a:hover{color:var(--green);}
+    .breadcrumb span{color:var(--green);}
+    .section-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.8rem;}
+    .section-label::before{content:'// ';color:var(--muted);}
+    h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5rem);color:#fff;line-height:1.0;margin-bottom:1.2rem;letter-spacing:0.04em;}
+    h1 em{font-style:normal;color:var(--green);}
+    h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.5rem,2.8vw,2.2rem);color:#fff;line-height:1.15;margin-bottom:1rem;}
+    h2 em{font-style:normal;color:var(--green);}
+    .hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:620px;}
+
+    .content-section{padding:5rem 4rem;}
+
+    /* WHY CUSTOM */
+    .why-custom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:5rem;}
+    .why-item{background:var(--surface);padding:2.5rem 2rem;transition:background 0.2s;}
+    .why-item:hover{background:#0C1A14;}
+    .why-icon{font-size:2rem;margin-bottom:1rem;}
+    .why-item h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--cyan);margin-bottom:0.6rem;}
+    .why-item p{font-size:0.88rem;color:var(--muted);line-height:1.65;}
+
+    /* SERVICE SCOPE TABLE */
+    .scope-table{width:100%;border-collapse:collapse;margin-bottom:5rem;}
+    .scope-table th{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;padding:1rem 1.5rem;border-bottom:2px solid var(--border);text-align:left;background:var(--surface);}
+    .scope-table th:first-child{color:var(--green);}
+    .scope-table td{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text);transition:background 0.15s;}
+    .scope-table tr:hover td{background:rgba(0,255,127,0.02);}
+    .scope-table tr:last-child td{border-bottom:none;}
+    .scope-table td:first-child{font-family:'Syne',sans-serif;font-weight:700;color:#fff;font-size:0.92rem;}
+    .scope-table td.tag{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);}
+    .check{color:var(--green);font-size:1rem;}
+    .dash{color:var(--border);}
+
+    /* FACTORS */
+    .factors{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:5rem;}
+    .factor{background:var(--surface);padding:2rem 2.2rem;display:flex;gap:1.2rem;align-items:flex-start;transition:background 0.2s;}
+    .factor:hover{background:#0C1A14;}
+    .factor-num{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:rgba(0,255,127,0.12);line-height:1;min-width:2.5rem;}
+    .factor h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--cyan);margin-bottom:0.4rem;}
+    .factor p{font-size:0.85rem;color:var(--muted);line-height:1.6;}
+
+    /* PROCESS */
+    .quote-process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--border);border:1px solid var(--border);margin-bottom:5rem;}
+    .qp-step{background:var(--surface);padding:2.5rem 2rem;position:relative;transition:background 0.2s;}
+    .qp-step:hover{background:#0C1A14;}
+    .qp-step::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--border);z-index:1;}
+    .qp-step:last-child::after{display:none;}
+    .step-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:rgba(0,255,127,0.07);line-height:1;margin-bottom:0.8rem;}
+    .step-time{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--cyan);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.5rem;}
+    .qp-step h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;color:#fff;margin-bottom:0.4rem;}
+    .qp-step p{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+
+    /* CTA BOX */
+    .cta-box{background:var(--surface);border:1px solid var(--border);padding:4rem;text-align:center;position:relative;overflow:hidden;}
+    .cta-box::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:300px;background:radial-gradient(ellipse,rgba(0,255,127,0.05) 0%,transparent 70%);pointer-events:none;}
+    .cta-box::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),var(--cyan),transparent);}
+    .cta-box h2{margin-bottom:0.8rem;}
+    .cta-box p{color:var(--muted);font-size:0.95rem;max-width:500px;margin:0 auto 2rem;line-height:1.7;}
+    .cta-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+    .btn-primary{font-family:'DM Mono',monospace;font-size:0.85rem;padding:1rem 2.4rem;background:var(--green);color:#050A0E;border:none;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:box-shadow 0.2s,transform 0.15s;text-decoration:none;display:inline-block;}
+    .btn-primary:hover{box-shadow:0 0 35px rgba(0,255,127,0.5);transform:translateY(-2px);}
+    .btn-ghost{font-family:'DM Mono',monospace;font-size:0.85rem;padding:1rem 2.4rem;background:transparent;color:var(--cyan);border:1px solid rgba(0,229,255,0.4);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s;text-decoration:none;display:inline-block;}
+    .btn-ghost:hover{background:rgba(0,229,255,0.06);}
+
+    footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .footer-text{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);letter-spacing:0.08em;}
+    .footer-links{display:flex;gap:1.5rem;}
+    .footer-links a{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--green);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    @media(max-width:900px){.why-custom{grid-template-columns:1fr;}.factors{grid-template-columns:1fr;}.quote-process{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:640px){nav{padding:1rem 1.5rem;}nav ul{display:none !important;}.nav-cta{display:none !important;}.hamburger{display:flex !important;}.page-hero,.content-section{padding-left:1.5rem;padding-right:1.5rem;}h1{font-size:2.8rem;}.quote-process{grid-template-columns:1fr;}.qp-step::after{display:none;}footer{flex-direction:column;gap:1rem;text-align:center;}.cta-buttons{flex-direction:column;align-items:center;}.scope-table th,.scope-table td{padding:0.8rem 1rem;font-size:0.82rem;}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../greyveil.html" class="logo">
+    <svg width="170" height="38" viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 2 L20 0 L20 14 C20 21 15 25 10 27 C5 25 0 21 0 14 L0 0 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1.2"/>
+      <path d="M4 9 L4 19 L13 19 L13 15 L9 15" stroke="#00FF7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <line x1="3" y1="11" x2="17" y2="11" stroke="#00E5FF" stroke-width="0.6" opacity="0.45"/>
+      <line x1="2" y1="14" x2="18" y2="14" stroke="#00E5FF" stroke-width="0.6" opacity="0.3"/>
+      <text x="27" y="18" font-family="Syne,sans-serif" font-weight="900" font-size="13" fill="#ffffff" letter-spacing="0.5">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
+      <text x="28" y="30" font-family="DM Mono,monospace" font-size="7" fill="#00E5FF" letter-spacing="5">TECH</text>
+    </svg>
+  </a>
+  <ul>
+    <li><a href="../greyveil.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html" class="active">Pricing</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Free Assessment</a>
+  <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-menu">
+  <ul>
+    <li><a href="../greyveil.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html" class="active">Pricing</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="mobile-cta">Free Assessment →</a>
+</div>
+
+<div class="page-hero" style="opacity:0;animation:fadeUp 0.7s 0.2s forwards;">
+  <div class="breadcrumb"><a href="../greyveil.html">Home</a> / <span>Pricing</span></div>
+  <p class="section-label">Investment</p>
+  <h1>Priced for <em>Your</em><br>Exact Threat.</h1>
+  <p class="hero-sub">No fixed packages. No guesswork. Every engagement is scoped to your environment, your risk profile, and your industry — then priced accordingly. Security that fits, not one-size security that doesn't.</p>
+</div>
+
+<section class="content-section">
+
+  <!-- WHY CUSTOM -->
+  <div class="reveal" style="margin-bottom:1rem;">
+    <p class="section-label">Why Custom Pricing</p>
+    <h2>Because Your Risk Profile Is <em>Unique</em></h2>
+  </div>
+  <div class="why-custom reveal">
+    <div class="why-item">
+      <div class="why-icon">🎯</div>
+      <h4>Right Scope, Right Cost</h4>
+      <p>A five-person fintech and a 200-seat enterprise have completely different attack surfaces. Flat-rate packages either over-charge one or under-protect the other.</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">🌍</div>
+      <h4>Africa-Specific Factors</h4>
+      <p>M-Pesa integrations, mobile-first infrastructure, regional compliance requirements — these demand tailored scoping that off-the-shelf pricing doesn't account for.</p>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">📊</div>
+      <h4>Maximum ROI</h4>
+      <p>You pay for exactly the coverage you need. Every shilling goes toward protecting your actual vulnerabilities — not a generic checklist.</p>
+    </div>
+  </div>
+
+  <!-- WHAT AFFECTS PRICE -->
+  <div class="reveal" style="margin-bottom:1rem;">
+    <p class="section-label">Pricing Factors</p>
+    <h2>What <em>Shapes</em> Your Quote</h2>
+  </div>
+  <div class="factors reveal">
+    <div class="factor"><div class="factor-num">01</div><div><h4>Scope & Attack Surface</h4><p>Number of systems, APIs, domains, cloud accounts, and endpoints in scope. More surface area = broader engagement.</p></div></div>
+    <div class="factor"><div class="factor-num">02</div><div><h4>Industry & Compliance</h4><p>Regulated sectors (banking, health, government) require additional compliance mapping and documentation.</p></div></div>
+    <div class="factor"><div class="factor-num">03</div><div><h4>Engagement Duration</h4><p>One-time audit vs. ongoing SOC retainer vs. quarterly penetration testing — duration and frequency affect cost significantly.</p></div></div>
+    <div class="factor"><div class="factor-num">04</div><div><h4>Response SLA</h4><p>Standard 24/7 monitoring vs. guaranteed sub-10-minute incident response. Faster SLAs require deeper team commitment.</p></div></div>
+    <div class="factor"><div class="factor-num">05</div><div><h4>Remediation Support</h4><p>Assessment-only vs. full fix-and-verify. Hands-on remediation and re-testing are scoped separately.</p></div></div>
+    <div class="factor"><div class="factor-num">06</div><div><h4>Organisation Size</h4><p>Team size, number of locations, and data volume inform the depth of coverage required to be truly effective.</p></div></div>
+  </div>
+
+  <!-- SERVICE SCOPE TABLE -->
+  <div class="reveal" style="margin-bottom:1rem;">
+    <p class="section-label">Services Overview</p>
+    <h2>What Each Engagement <em>Covers</em></h2>
+  </div>
+  <div class="reveal" style="overflow-x:auto;margin-bottom:5rem;">
+    <table class="scope-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Typical Duration</th>
+          <th>Deliverable</th>
+          <th>Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Penetration Testing</td>
+          <td class="tag">3 – 10 days</td>
+          <td class="tag">Full technical report + exec summary</td>
+          <td class="tag">Startups, fintechs, SaaS</td>
+        </tr>
+        <tr>
+          <td>SOC / Threat Monitoring</td>
+          <td class="tag">Monthly retainer</td>
+          <td class="tag">Real-time alerts + monthly report</td>
+          <td class="tag">All businesses, 24/7 coverage</td>
+        </tr>
+        <tr>
+          <td>Cloud Security Review</td>
+          <td class="tag">5 – 7 days</td>
+          <td class="tag">Misconfiguration report + hardening plan</td>
+          <td class="tag">AWS / Azure / GCP users</td>
+        </tr>
+        <tr>
+          <td>Compliance & Audit</td>
+          <td class="tag">2 – 8 weeks</td>
+          <td class="tag">Gap analysis + remediation roadmap</td>
+          <td class="tag">DPA 2019, ISO 27001, PCI-DSS</td>
+        </tr>
+        <tr>
+          <td>Incident Response</td>
+          <td class="tag">As needed / retainer</td>
+          <td class="tag">Containment report + root cause analysis</td>
+          <td class="tag">Post-breach or pre-breach readiness</td>
+        </tr>
+        <tr>
+          <td>Free Security Assessment</td>
+          <td class="tag">48 hours</td>
+          <td class="tag">Top 3 risks identified, no obligation</td>
+          <td class="tag">Any business, anywhere</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- QUOTE PROCESS -->
+  <div class="reveal" style="margin-bottom:1rem;">
+    <p class="section-label">Getting a Quote</p>
+    <h2>From First Contact to <em>Proposal</em></h2>
+  </div>
+  <div class="quote-process reveal">
+    <div class="qp-step">
+      <div class="step-num">01</div>
+      <div class="step-time">Day 0</div>
+      <h4>Free Assessment</h4>
+      <p>Tell us about your business, industry, and concerns. Takes 15 minutes — no obligation.</p>
+    </div>
+    <div class="qp-step">
+      <div class="step-num">02</div>
+      <div class="step-time">Within 48 hrs</div>
+      <h4>Scoping Call</h4>
+      <p>Our team reviews your environment and asks the right questions to build an accurate scope.</p>
+    </div>
+    <div class="qp-step">
+      <div class="step-num">03</div>
+      <div class="step-time">Within 72 hrs</div>
+      <h4>Tailored Proposal</h4>
+      <p>You receive a clear, itemised proposal with timeline, deliverables, and investment breakdown.</p>
+    </div>
+    <div class="qp-step">
+      <div class="step-num">04</div>
+      <div class="step-time">Day 5–7</div>
+      <h4>Engagement Begins</h4>
+      <p>Once approved, we assign your team and begin work — with a dedicated point of contact throughout.</p>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box reveal">
+    <h2>Ready to Get Your <em>Quote?</em></h2>
+    <p>Start with a free, no-obligation assessment. We'll identify your top 3 risks and give you a clear picture of what proper protection looks like for your business.</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn-primary">Request Free Assessment →</a>
+      <a href="services.html" class="btn-ghost">Explore Services</a>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <a href="../greyveil.html" style="display:inline-flex;align-items:center;text-decoration:none;">
+    <svg width="140" height="32" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 2 L16 0 L16 11 C16 17 12 21 8 23 C4 21 0 17 0 11 L0 0 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1"/>
+      <path d="M3 7 L3 16 L10 16 L10 12 L7 12" stroke="#00FF7F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="22" y="15" font-family="Syne,sans-serif" font-weight="900" font-size="11" fill="#ffffff" letter-spacing="0.5">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
+      <text x="23" y="26" font-family="DM Mono,monospace" font-size="6" fill="#00E5FF" letter-spacing="4">TECH</text>
+    </svg>
+  </a>
+  <div class="footer-text">© 2025 Greyveil Tech Ltd. Nairobi, Kenya.</div>
+  <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">LinkedIn</a><a href="contact.html">Contact</a></div>
+</footer>
+
+<script>
+  const reveals=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.1});
+  reveals.forEach(r=>obs.observe(r));
+  (function(){const nav=document.querySelector('nav');let lastY=0,ticking=false,hideTimer=null;function hs(){const y=window.scrollY;if(y>lastY&&y>80)nav.classList.add('nav-hidden');else nav.classList.remove('nav-hidden');nav.classList.toggle('nav-scrolled',y>10);lastY=y;clearTimeout(hideTimer);hideTimer=setTimeout(()=>nav.classList.remove('nav-hidden'),1200);}window.addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(()=>{hs();ticking=false;});ticking=true;}},{passive:true});})();
+  (function(){const h=document.querySelector('.hamburger'),m=document.querySelector('.mobile-menu');if(!h||!m)return;h.addEventListener('click',()=>{h.classList.toggle('open');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';});m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{h.classList.remove('open');m.classList.remove('open');document.body.style.overflow='';}));})();
+</script>
+</body>
+</html>

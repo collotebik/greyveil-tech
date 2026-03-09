@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Services — Greyveil Tech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#050A0E; --surface:#0A1218; --border:#0F2A1A;
+      --green:#00FF7F; --cyan:#00E5FF; --red:#FF2D55;
+      --text:#C8D8C8; --muted: #B8CCBF; --grid:rgba(0,255,127,0.03);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:18px;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    body::after{content:'';position:fixed;inset:0;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;}
+    nav,section,footer{position:relative;z-index:2;}
+
+    /* NAV */
+        nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 4rem;
+      background: rgba(5,10,14,0.92);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      transform: translateY(0);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s;
+    }
+    nav.nav-hidden { transform: translateY(-100%); }
+    nav.nav-scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+
+    /* MOBILE HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      z-index: 101;
+      position: relative;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--green);
+      transition: transform 0.3s, opacity 0.3s, width 0.3s;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE DROPDOWN MENU */
+    .mobile-menu {
+      visibility: hidden;
+      opacity: 0;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5,10,14,0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 99;
+      padding: 5rem 2rem 2rem;
+      transform: translateY(-12px);
+      transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+      overflow-y: auto;
+    }
+    .mobile-menu.open {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .mobile-menu ul { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .mobile-menu ul li { border-bottom: 1px solid var(--border); }
+    .mobile-menu ul a {
+      display: block;
+      padding: 1.1rem 0.5rem;
+      font-family:'DM Mono',monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+    .mobile-menu ul a::before { content: '> '; color: var(--border); transition: color 0.2s; }
+    .mobile-menu ul a:hover { color: var(--green); padding-left: 0.5rem; }
+    .mobile-menu ul a:hover::before { color: var(--green); }
+    .mobile-menu .mobile-cta {
+      display: block;
+      margin-top: 1.5rem;
+      padding: 0.9rem;
+      text-align: center;
+      background: var(--green);
+      color: #050A0E;
+      font-family:'DM Mono',monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .logo{font-family:'Syne',sans-serif;font-size:1.25rem;text-decoration:none;}
+    .logo .grey{color:#aaa;} .logo .veil{color:var(--green);} .logo .tech{color:var(--cyan);font-size:0.7rem;letter-spacing:0.2em;margin-left:4px;}
+    nav ul{display:flex;gap:2.5rem;list-style:none;}
+    nav ul a{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);text-decoration:none;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;}
+    nav ul a:hover, nav ul a.active{color:var(--green);}
+    .nav-cta{font-family:'DM Mono',monospace;font-size:0.78rem;padding:0.55rem 1.3rem;background:transparent;border:1px solid var(--green);color:var(--green);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s,box-shadow 0.2s;text-decoration:none;}
+    .nav-cta:hover{background:rgba(0,255,127,0.08);box-shadow:0 0 18px rgba(0,255,127,0.3);}
+
+    /* HERO */
+    .page-hero{padding:9rem 4rem 5rem;border-bottom:1px solid var(--border);}
+    .breadcrumb{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .breadcrumb a:hover{color:var(--green);}
+    .breadcrumb span{color:var(--green);}
+    .section-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.8rem;}
+    .section-label::before{content:'// ';color:var(--muted);}
+    h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:1.2rem;}
+    h1 em{font-style:normal;color:var(--green);}
+    .hero-sub{max-width:600px;font-size:1.05rem;color:var(--muted);line-height:1.75;}
+
+    /* SERVICES GRID */
+    .services-section{padding:5rem 4rem;}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--border);border:1.5px solid var(--border);}
+
+    .service-card{
+      background:var(--surface);
+      padding:2.8rem 2.2rem;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      box-sizing:border-box;
+      transition:background 0.25s;
+    }
+    .service-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green));transform:scaleX(0);transform-origin:left;transition:transform 0.35s ease;}
+    .service-card:hover::before{transform:scaleX(1);}
+    .service-card:hover{background:#0C1A20;}
+
+    .card-num{font-family:'Syne',sans-serif;font-size:0.6rem;color:rgba(0,229,255,0.2);letter-spacing:0.2em;margin-bottom:1.2rem;}
+    .card-icon{font-size:2.2rem;margin-bottom:1.2rem;filter:drop-shadow(0 0 10px rgba(0,229,255,0.3));}
+    .service-card h2{font-family:'Syne',sans-serif;font-size:1rem;color:var(--cyan);letter-spacing:0.02em;margin-bottom:0.8rem;line-height:1.3;}
+    .service-card p{font-size:0.92rem;color:var(--muted);line-height:1.65;flex:1;}
+
+    .card-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1.2rem;}
+    .tag{font-family:'DM Mono',monospace;font-size:0.6rem;padding:0.2rem 0.6rem;border:1px solid var(--border);color:var(--muted);letter-spacing:0.08em;}
+
+    .card-cta{
+      display:inline-flex;align-items:center;gap:0.6rem;
+      margin-top:1.8rem;
+      font-family:'DM Mono',monospace;
+      font-size:0.75rem;
+      color:var(--green);
+      text-decoration:none;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      border-bottom:1px solid transparent;
+      transition:border-color 0.2s,gap 0.2s;
+      width:fit-content;
+    }
+    .card-cta:hover{border-color:var(--green);gap:0.9rem;}
+    .card-cta .arrow{transition:transform 0.2s;}
+    .card-cta:hover .arrow{transform:translateX(4px);}
+
+    /* BOTTOM CTA */
+    .bottom-cta{
+      margin:0 4rem 5rem;
+      padding:3.5rem 3rem;
+      background:var(--surface);
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+      position:relative;overflow:hidden;
+    }
+    .bottom-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:200px;background:radial-gradient(ellipse,rgba(0,229,255,0.04) 0%,transparent 70%);pointer-events:none;}
+    .bottom-cta h3{font-family:'Syne',sans-serif;font-size:1.3rem;color:#fff;margin-bottom:0.5rem;}
+    .bottom-cta p{color:var(--muted);font-size:0.95rem;max-width:480px;}
+    .btn-primary{font-family:'DM Mono',monospace;font-size:0.85rem;padding:0.95rem 2.2rem;background:var(--green);color:#050A0E;border:none;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:box-shadow 0.2s,transform 0.15s;text-decoration:none;display:inline-block;}
+    .btn-primary:hover{box-shadow:0 0 35px rgba(0,255,127,0.5);transform:translateY(-2px);}
+
+    /* FOOTER */
+    footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .footer-logo{font-family:'Syne',sans-serif;font-size:1rem;text-decoration:none;}
+    .footer-logo .grey{color:#aaa;} .footer-logo .veil{color:var(--green);} .footer-logo .tech{color:var(--cyan);font-size:0.65rem;letter-spacing:0.2em;margin-left:4px;}
+    .footer-text{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);letter-spacing:0.08em;}
+    .footer-links{display:flex;gap:1.5rem;}
+    .footer-links a{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--green);}
+
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    @media(max-width:1100px){.services-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:640px){
+      nav{padding:1rem 1.5rem;}
+      .hamburger { display: flex !important; }
+      nav ul { display: none !important; }
+      .nav-cta { display: none !important; } nav ul{display:none;}
+      .page-hero,.services-section{padding-left:1.5rem;padding-right:1.5rem;}
+      .services-grid{grid-template-columns:1fr !important;gap:0;border:1px solid var(--border);}.service-card{padding:2rem 1.5rem;width:100%;border-bottom:1px solid var(--border);overflow:visible;}
+      .bottom-cta{margin:0 1.5rem 3rem;flex-direction:column;gap:1.5rem;text-align:center;}
+      footer{flex-direction:column;gap:1rem;text-align:center;}
+    }
+  
+    /* ── BEBAS NEUE — Hero h1 only ── */
+    .page-hero h1,
+    #hero h1 {
+      font-family: 'Bebas Neue', 'Syne', sans-serif;
+      letter-spacing: 0.04em;
+      font-weight: 400;
+    }
+
+    /* ── SYNE TUNING ── */
+    h2 { font-weight: 800; }
+    h3 { font-weight: 700; }
+    h4 { font-weight: 700; }
+    .section-label { font-weight: 500; }
+    .stat-num, .why-stat-num, .step-num, .flow-num,
+    .tier-name, .roadmap-year, .story-year {
+      font-family: 'Bebas Neue', 'Syne', sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+  
+    @media(max-width:480px){
+      .services-grid{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:0;
+        background:none;
+        border:1px solid var(--border);
+      }
+      .service-card{
+        width:100% !important;
+        padding:1.8rem 1.2rem !important;
+        border-bottom:1px solid var(--border);
+        overflow:visible !important;
+      }
+      .service-card:last-child{ border-bottom:none; }
+      .card-cta{ font-size:0.7rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../greyveil.html" class="logo" style="display:inline-flex;align-items:center;text-decoration:none;"><svg width="170" height="38" viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 2 L20 0 L20 14 C20 21 15 25 10 27 C5 25 0 21 0 14 L0 0 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1.2"/>
+        <path d="M4 9 L4 19 L13 19 L13 15 L9 15" stroke="#00FF7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="3" y1="11" x2="17" y2="11" stroke="#00E5FF" stroke-width="0.6" opacity="0.45"/>
+        <line x1="2" y1="14" x2="18" y2="14" stroke="#00E5FF" stroke-width="0.6" opacity="0.3"/>
+        <text x="27" y="18" font-family="Syne,sans-serif" font-weight="900" font-size="13" fill="#ffffff" letter-spacing="0.5">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
+        <text x="28" y="30" font-family="DM Mono,monospace" font-size="7" fill="#00E5FF" letter-spacing="5">TECH</text>
+      </svg></a>
+  <ul>
+    <li><a href="../greyveil.html">Home</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="blog.html">Insights</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Free Assessment</a>
+
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu">
+  <ul>
+    <li><a href="../greyveil.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="blog.html">Insights</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="mobile-cta">Free Assessment →</a>
+</div>
+
+<section class="page-hero">
+  <div class="breadcrumb"><a href="../greyveil.html">Home</a> / <span>Services</span></div>
+  <p class="section-label">What We Do</p>
+  <h1>Comprehensive Security <em>Solutions</em></h1>
+  <p class="hero-sub">From proactive threat hunting to rapid incident response — Greyveil Tech delivers enterprise-grade cybersecurity tailored for Africa's digital economy. Click any service to explore in detail.</p>
+</section>
+
+<section class="services-section">
+  <div class="services-grid reveal">
+
+    <div class="service-card">
+      <div class="card-num">01</div>
+      <div class="card-icon">🔍</div>
+      <h2>Penetration Testing</h2>
+      <p>Real-world attack simulations that expose your critical vulnerabilities before adversaries do. We test web apps, APIs, networks, mobile, and cloud infrastructure using the same tools as elite threat actors.</p>
+      <div class="card-tags">
+        <span class="tag">Web Apps</span>
+        <span class="tag">Network</span>
+        <span class="tag">Cloud</span>
+        <span class="tag">Mobile</span>
+      </div>
+      <a href="pentest.html" class="card-cta">Explore Service <span class="arrow">→</span></a>
+    </div>
+
+    <div class="service-card">
+      <div class="card-num">02</div>
+      <div class="card-icon">🛡️</div>
+      <h2>SOC / Threat Monitoring</h2>
+      <p>24/7 Security Operations Center with AI-assisted threat hunting, SIEM management, and real-time alerting. Get enterprise-grade monitoring without the in-house overhead.</p>
+      <div class="card-tags">
+        <span class="tag">24/7 Coverage</span>
+        <span class="tag">SIEM</span>
+        <span class="tag">Threat Hunting</span>
+      </div>
+      <a href="soc.html" class="card-cta">Explore Service <span class="arrow">→</span></a>
+    </div>
+
+    <div class="service-card">
+      <div class="card-num">03</div>
+      <div class="card-icon">☁️</div>
+      <h2>Cloud Security</h2>
+      <p>Harden your AWS, Azure, and GCP environments with identity & access management, cloud-native threat detection, misconfiguration remediation, and DevSecOps integration.</p>
+      <div class="card-tags">
+        <span class="tag">AWS</span>
+        <span class="tag">Azure</span>
+        <span class="tag">GCP</span>
+        <span class="tag">DevSecOps</span>
+      </div>
+      <a href="cloud.html" class="card-cta">Explore Service <span class="arrow">→</span></a>
+    </div>
+
+    <div class="service-card">
+      <div class="card-num">04</div>
+      <div class="card-icon">📋</div>
+      <h2>Compliance & Audit</h2>
+      <p>Navigate Kenya's Data Protection Act, ISO 27001, PCI-DSS, and regional frameworks across Africa. We get you audit-ready and keep you compliant as regulations evolve.</p>
+      <div class="card-tags">
+        <span class="tag">DPA 2019</span>
+        <span class="tag">ISO 27001</span>
+        <span class="tag">PCI-DSS</span>
+      </div>
+      <a href="compliance.html" class="card-cta">Explore Service <span class="arrow">→</span></a>
+    </div>
+
+    <div class="service-card">
+      <div class="card-num">05</div>
+      <div class="card-icon">🚨</div>
+      <h2>Incident Response</h2>
+      <p>When the worst happens, we move fast. Breach containment, forensic investigation, recovery planning, and post-incident hardening — response in hours, not days.</p>
+      <div class="card-tags">
+        <span class="tag">Emergency</span>
+        <span class="tag">Forensics</span>
+        <span class="tag">Recovery</span>
+      </div>
+      <a href="incident.html" class="card-cta">Explore Service <span class="arrow">→</span></a>
+    </div>
+
+  </div>
+</section>
+
+<div class="bottom-cta reveal">
+  <div>
+    <h3>Not Sure Where to Start?</h3>
+    <p>Book a free 30-minute security assessment. We'll identify your highest risks and recommend the right services for your business size and budget.</p>
+  </div>
+  <a href="#" class="btn-primary">Get Free Assessment →</a>
+</div>
+
+<footer>
+  <a href="../greyveil.html" class="footer-logo" style="display:inline-flex;align-items:center;text-decoration:none;"><svg width="140" height="32" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 2 L16 0 L16 11 C16 17 12 21 8 23 C4 21 0 17 0 11 L0 0 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1"/>
+        <path d="M3 7 L3 16 L10 16 L10 12 L7 12" stroke="#00FF7F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="2" y1="9" x2="14" y2="9" stroke="#00E5FF" stroke-width="0.5" opacity="0.45"/>
+        <text x="22" y="15" font-family="Syne,sans-serif" font-weight="900" font-size="11" fill="#ffffff" letter-spacing="0.5">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
+        <text x="23" y="26" font-family="DM Mono,monospace" font-size="6" fill="#00E5FF" letter-spacing="4">TECH</text>
+      </svg></a>
+  <div class="footer-text">© 2025 Greyveil Tech Ltd. Nairobi, Kenya.</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a><a href="#">Terms</a><a href="#">LinkedIn</a><a href="#">+254 700 000 000</a>
+  </div>
+</footer>
+
+<script>
+  const reveals=document.querySelectorAll('.reveal');
+  const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+  reveals.forEach(r=>observer.observe(r));
+
+  // ── NAV HIDE/SHOW ON SCROLL ──
+  (function() {
+    const nav = document.querySelector('nav');
+    let lastY = 0, ticking = false, hideTimer = null;
+
+    function handleScroll() {
+      const y = window.scrollY;
+      if (y > lastY && y > 80) {
+        nav.classList.add('nav-hidden');
+      } else {
+        nav.classList.remove('nav-hidden');
+      }
+      nav.classList.toggle('nav-scrolled', y > 10);
+      lastY = y;
+
+      // Show nav when scrolling stops
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        nav.classList.remove('nav-hidden');
+      }, 1200);
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => { handleScroll(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+
+  // ── MOBILE HAMBURGER ──
+  (function() {
+    const hamburger = document.querySelector('.hamburger');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    if (!hamburger || !mobileMenu) return;
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+
+    // Close on link click
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close on outside tap
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target === mobileMenu) {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+
+</script>
+</body>
+</html>

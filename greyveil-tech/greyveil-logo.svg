@@ -1,0 +1,26 @@
+<svg width="320" height="80" viewBox="0 0 320 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield -->
+  <path d="M18 8 L36 4 L36 30 C36 42 27 50 18 54 C9 50 0 42 0 30 L0 4 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1.5"/>
+  <path d="M18 8 L36 4 L36 30 C36 42 27 50 18 54 C9 50 0 42 0 30 L0 4 Z" fill="url(#shieldFill)" opacity="0.15"/>
+  <!-- Scan lines in shield -->
+  <path d="M5 22 L31 22" stroke="#00E5FF" stroke-width="0.9" opacity="0.45"/>
+  <path d="M4 29 L32 29" stroke="#00E5FF" stroke-width="0.9" opacity="0.3"/>
+  <path d="M5 36 L31 36" stroke="#00E5FF" stroke-width="0.9" opacity="0.18"/>
+  <!-- G mark -->
+  <path d="M8 20 L8 38 L22 38 L22 30 L16 30" stroke="#00FF7F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Wordmark -->
+  <text x="48" y="38" font-family="Orbitron, monospace" font-weight="900" font-size="22" fill="#ffffff" letter-spacing="1">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
+  <!-- TECH -->
+  <text x="50" y="56" font-family="Share Tech Mono, monospace" font-size="11" fill="#00E5FF" letter-spacing="8">TECH</text>
+  <!-- Divider -->
+  <line x1="48" y1="43" x2="308" y2="43" stroke="#0F2A1A" stroke-width="1"/>
+  <!-- Tagline -->
+  <text x="50" y="70" font-family="Share Tech Mono, monospace" font-size="7.5" fill="#4A6A5A" letter-spacing="2.5">SECURING AFRICA'S DIGITAL FUTURE</text>
+  <!-- Gradient defs -->
+  <defs>
+    <linearGradient id="shieldFill" x1="0" y1="4" x2="36" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00FF7F"/>
+      <stop offset="100%" stop-color="#00E5FF"/>
+    </linearGradient>
+  </defs>
+</svg>

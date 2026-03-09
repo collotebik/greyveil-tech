@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Incident Response — Greyveil Tech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#050A0E;--surface:#0A1218;--border:#0F2A1A;--green:#00FF7F;--cyan:#00E5FF;--red:#FF2D55;--text:#C8D8C8;--muted: #B8CCBF;--grid:rgba(0,255,127,0.03);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:18px;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    body::after{content:'';position:fixed;inset:0;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;}
+    nav,section,footer,.page-hero{position:relative;z-index:2;}
+        nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 4rem;
+      background: rgba(5,10,14,0.92);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      transform: translateY(0);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s;
+    }
+    nav.nav-hidden { transform: translateY(-100%); }
+    nav.nav-scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+
+    /* MOBILE HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      z-index: 101;
+      position: relative;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--green);
+      transition: transform 0.3s, opacity 0.3s, width 0.3s;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE DROPDOWN MENU */
+    .mobile-menu {
+      visibility: hidden;
+      opacity: 0;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5,10,14,0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 99;
+      padding: 5rem 2rem 2rem;
+      transform: translateY(-12px);
+      transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+      overflow-y: auto;
+    }
+    .mobile-menu.open {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .mobile-menu ul { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .mobile-menu ul li { border-bottom: 1px solid var(--border); }
+    .mobile-menu ul a {
+      display: block;
+      padding: 1.1rem 0.5rem;
+      font-family:'DM Mono',monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+    .mobile-menu ul a::before { content: '> '; color: var(--border); transition: color 0.2s; }
+    .mobile-menu ul a:hover { color: var(--green); padding-left: 0.5rem; }
+    .mobile-menu ul a:hover::before { color: var(--green); }
+    .mobile-menu .mobile-cta {
+      display: block;
+      margin-top: 1.5rem;
+      padding: 0.9rem;
+      text-align: center;
+      background: var(--green);
+      color: #050A0E;
+      font-family:'DM Mono',monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .logo{font-family:'Syne',sans-serif;font-size:1.25rem;text-decoration:none;}
+    .logo .grey{color:#aaa;}.logo .veil{color:var(--green);}.logo .tech{color:var(--cyan);font-size:0.7rem;letter-spacing:0.2em;margin-left:4px;}
+    nav ul{display:flex;gap:2.5rem;list-style:none;}
+    nav ul a{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);text-decoration:none;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;}
+    nav ul a:hover,nav ul a.active{color:var(--green);}
+    .nav-cta{font-family:'DM Mono',monospace;font-size:0.78rem;padding:0.55rem 1.3rem;background:transparent;border:1px solid var(--red);color:var(--red);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s;text-decoration:none;}
+    .nav-cta:hover{background:rgba(255,45,85,0.08);}
+
+    /* Hero — RED tinted for urgency */
+    .page-hero{padding:9rem 4rem 5rem;border-bottom:1px solid rgba(255,45,85,0.15);background:linear-gradient(180deg,rgba(255,45,85,0.03) 0%,transparent 100%);}
+    .breadcrumb{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb span{color:var(--red);}
+    .section-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--red);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.8rem;}
+    .section-label::before{content:'// ';color:var(--muted);}
+    h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:1.2rem;}
+    h1 em{font-style:normal;color:var(--red);}
+    .hero-sub{max-width:650px;font-size:1rem;color:var(--muted);line-height:1.75;margin-bottom:2rem;}
+
+    /* Emergency hotline */
+    .hotline{display:inline-flex;align-items:center;gap:1rem;padding:1.2rem 2rem;background:rgba(255,45,85,0.08);border:1px solid rgba(255,45,85,0.3);margin-top:1rem;}
+    .hotline-pulse{width:12px;height:12px;border-radius:50%;background:var(--red);animation:pulse 1.5s ease-out infinite;}
+    .hotline-text{font-family:'DM Mono',monospace;font-size:0.8rem;color:#fff;letter-spacing:0.1em;}
+    .hotline-number{font-family:'Syne',sans-serif;font-size:1.1rem;color:var(--red);letter-spacing:0.05em;}
+
+    .content-section{padding:5rem 4rem;}
+    h2{font-family:'Syne',sans-serif;font-size:clamp(1.4rem,2.5vw,2rem);color:#fff;line-height:1.2;margin-bottom:1rem;}
+    h2 em{font-style:normal;color:var(--red);}
+    h2 .g{color:var(--green);}
+    .lead{font-size:1.05rem;color:var(--text);line-height:1.75;max-width:700px;margin-bottom:3rem;}
+    .section-label-green{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--green);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.8rem;}
+    .section-label-green::before{content:'// ';color:var(--muted);}
+
+    /* Response timeline */
+    .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--border);margin-bottom:5rem;background:var(--border);}
+    .tl-step{background:var(--surface);padding:2rem 1.6rem;position:relative;transition:background 0.2s;}
+    .tl-step:hover{background:#1A0A0A;}
+    .tl-time{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--red);margin-bottom:0.5rem;text-shadow:0 0 15px rgba(255,45,85,0.3);}
+    .tl-step h4{font-family:'Syne',sans-serif;font-size:0.78rem;color:#fff;margin-bottom:0.5rem;letter-spacing:0.02em;}
+    .tl-step p{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+
+    /* Incident types */
+    .incident-types{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:5rem;}
+    .incident{background:var(--surface);padding:2rem;transition:background 0.2s;border-left:2px solid transparent;}
+    .incident:hover{background:#130808;border-left-color:var(--red);}
+    .incident-icon{font-size:1.8rem;margin-bottom:0.8rem;}
+    .incident h4{font-family:'Syne',sans-serif;font-size:0.82rem;color:var(--red);margin-bottom:0.6rem;letter-spacing:0.02em;}
+    .incident p{font-size:0.86rem;color:var(--muted);line-height:1.6;}
+
+    /* Retainer CTA */
+    .retainer{background:rgba(0,255,127,0.03);border:1px solid rgba(0,255,127,0.15);padding:3rem;margin-bottom:3rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+    .retainer h3{font-family:'Syne',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:0.8rem;}
+    .retainer p{font-size:0.92rem;color:var(--muted);line-height:1.7;}
+    .retainer-benefits{list-style:none;}
+    .retainer-benefits li{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);padding:0.5rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.8rem;}
+    .retainer-benefits li:last-child{border-bottom:none;}
+    .retainer-benefits li::before{content:'✓';color:var(--green);}
+
+    .page-cta{background:rgba(255,45,85,0.05);border:1px solid rgba(255,45,85,0.2);padding:3.5rem;text-align:center;position:relative;overflow:hidden;}
+    .page-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:200px;background:radial-gradient(ellipse,rgba(255,45,85,0.06) 0%,transparent 70%);pointer-events:none;}
+    .page-cta h3{font-family:'Syne',sans-serif;font-size:1.4rem;color:#fff;margin-bottom:0.8rem;}
+    .page-cta p{color:var(--muted);font-size:0.95rem;max-width:500px;margin:0 auto 2rem;}
+    .cta-buttons{display:flex;gap:1rem;justify-content:center;}
+    .btn-red{font-family:'DM Mono',monospace;font-size:0.85rem;padding:0.95rem 2.2rem;background:var(--red);color:#fff;border:none;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:box-shadow 0.2s;text-decoration:none;display:inline-block;}
+    .btn-red:hover{box-shadow:0 0 35px rgba(255,45,85,0.5);}
+    .btn-ghost{font-family:'DM Mono',monospace;font-size:0.85rem;padding:0.95rem 2.2rem;background:transparent;color:var(--cyan);border:1px solid rgba(0,229,255,0.4);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:background 0.2s;text-decoration:none;display:inline-block;}
+    .btn-ghost:hover{background:rgba(0,229,255,0.06);}
+
+    footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+    .footer-logo{font-family:'Syne',sans-serif;font-size:1rem;text-decoration:none;}
+    .footer-logo .grey{color:#aaa;}.footer-logo .veil{color:var(--green);}.footer-logo .tech{color:var(--cyan);font-size:0.65rem;letter-spacing:0.2em;margin-left:4px;}
+    .footer-text{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);}
+    .footer-links{display:flex;gap:1.5rem;}
+    .footer-links a{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--muted);text-decoration:none;text-transform:uppercase;letter-spacing:0.1em;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--green);}
+
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,45,85,0.4);}70%{box-shadow:0 0 0 12px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+    @media(max-width:1000px){.timeline{grid-template-columns:repeat(2,1fr);}.incident-types{grid-template-columns:1fr 1fr;}.retainer{grid-template-columns:1fr;}}
+    @media(max-width:640px){nav{padding:1rem 1.5rem;}
+      .hamburger { display: flex !important; }
+      nav ul { display: none !important; }
+      .nav-cta { display: none !important; }nav ul{display:none;}.page-hero,.content-section{padding-left:1.5rem;padding-right:1.5rem;}.timeline,.incident-types{grid-template-columns:1fr;}.cta-buttons{flex-direction:column;}footer{flex-direction:column;gap:1rem;text-align:center;}}
+  
+    /* ── BEBAS NEUE — Hero h1 only ── */
+    .page-hero h1,
+    #hero h1 {
+      font-family: 'Bebas Neue', 'Syne', sans-serif;
+      letter-spacing: 0.04em;
+      font-weight: 400;
+    }
+
+    /* ── SYNE TUNING ── */
+    h2 { font-weight: 800; }
+    h3 { font-weight: 700; }
+    h4 { font-weight: 700; }
+    .section-label { font-weight: 500; }
+    .stat-num, .why-stat-num, .step-num, .flow-num,
+    .tier-name, .roadmap-year, .story-year {
+      font-family: 'Bebas Neue', 'Syne', sans-serif;
+      letter-spacing: 0.05em;
+    }
+
+  </style>
+</head>
+<body>
+<nav>
+  <a href="../greyveil.html" class="logo" style="display:inline-flex;align-items:center;text-decoration:none;"><svg width="170" height="38" viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 2 L20 0 L20 14 C20 21 15 25 10 27 C5 25 0 21 0 14 L0 0 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1.2"/>
+        <path d="M4 9 L4 19 L13 19 L13 15 L9 15" stroke="#00FF7F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="3" y1="11" x2="17" y2="11" stroke="#00E5FF" stroke-width="0.6" opacity="0.45"/>
+        <line x1="2" y1="14" x2="18" y2="14" stroke="#00E5FF" stroke-width="0.6" opacity="0.3"/>
+        <text x="27" y="18" font-family="Syne,sans-serif" font-weight="900" font-size="13" fill="#ffffff" letter-spacing="0.5">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
+        <text x="28" y="30" font-family="DM Mono,monospace" font-size="7" fill="#00E5FF" letter-spacing="5">TECH</text>
+      </svg></a>
+  <ul>
+    <li><a href="../greyveil.html">Home</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="blog.html">Insights</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="#" class="nav-cta">🚨 Emergency Line</a>
+
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu">
+  <ul>
+    <li><a href="../greyveil.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="blog.html">Insights</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="mobile-cta">Free Assessment →</a>
+</div>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="../greyveil.html">Home</a> / <a href="services.html">Services</a> / <span>Incident Response</span></div>
+  <p class="section-label">Emergency Response</p>
+  <h1>Incident <em>Response</em></h1>
+  <p class="hero-sub">When a breach hits, every minute costs money, reputation, and trust. Our incident response team deploys within the hour — containing the threat, preserving evidence, and getting you back to operational as fast as possible.</p>
+  <div class="hotline">
+    <div class="hotline-pulse"></div>
+    <div>
+      <div class="hotline-text">24/7 EMERGENCY HOTLINE</div>
+      <div class="hotline-number">+254 700 000 000</div>
+    </div>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="reveal">
+    <p class="section-label">Response Timeline</p>
+    <h2>From <em>Detection</em> to <span class="g">Recovery</span></h2>
+    <p class="lead">Speed is everything in incident response. Our SLA guarantees response within one hour and full containment within four hours for active breaches.</p>
+    <div class="timeline">
+      <div class="tl-step"><div class="tl-time">&lt;1hr</div><h4>Initial Response</h4><p>Analyst on call. Situation assessed. Severity classified. Containment strategy initiated.</p></div>
+      <div class="tl-step"><div class="tl-time">&lt;4hr</div><h4>Containment</h4><p>Threat isolated. Affected systems quarantined. Lateral movement stopped. Data exfil halted.</p></div>
+      <div class="tl-step"><div class="tl-time">&lt;12hr</div><h4>Forensics</h4><p>Digital forensics underway. Attack vector identified. Evidence preserved for legal if needed.</p></div>
+      <div class="tl-step"><div class="tl-time">&lt;48hr</div><h4>Eradication</h4><p>All traces of attacker removed. Backdoors closed. Systems cleaned and verified.</p></div>
+      <div class="tl-step"><div class="tl-time">&lt;72hr</div><h4>Recovery</h4><p>Systems restored. Operations resumed. Post-incident report delivered with hardening plan.</p></div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <p class="section-label-green">Incident Types</p>
+    <h2>We Respond to <em>Every</em> Threat</h2>
+    <div class="incident-types">
+      <div class="incident"><div class="incident-icon">🔒</div><h4>Ransomware Attacks</h4><p>Rapid containment, decryption support, backup restoration, and ransom negotiation advisory. We've seen it all.</p></div>
+      <div class="incident"><div class="incident-icon">💸</div><h4>Financial Fraud & BEC</h4><p>Business Email Compromise, M-Pesa fraud, and wire transfer fraud — traced, documented, and reported to authorities.</p></div>
+      <div class="incident"><div class="incident-icon">🕵️</div><h4>Data Breaches</h4><p>Full forensic investigation of data exfiltration events, scope determination, and regulatory notification support.</p></div>
+      <div class="incident"><div class="incident-icon">⚡</div><h4>DDoS & Service Disruption</h4><p>Real-time mitigation of distributed denial-of-service attacks to restore service availability fast.</p></div>
+      <div class="incident"><div class="incident-icon">🔑</div><h4>Account Takeovers</h4><p>Identity compromise, admin account hijacking, and cloud account takeover — contained and remediated.</p></div>
+      <div class="incident"><div class="incident-icon">🏭</div><h4>Supply Chain Attacks</h4><p>Third-party compromise investigation, blast radius assessment, and vendor security review.</p></div>
+    </div>
+  </div>
+
+  <div class="retainer reveal">
+    <div>
+      <h3>Don't Wait for a Breach — Get on Retainer</h3>
+      <p>Incident response retainer clients get priority response, pre-agreed rates, and a team that already knows your environment. When crisis hits, every second counts.</p>
+    </div>
+    <div>
+      <ul class="retainer-benefits">
+        <li>Priority 1-hour response SLA</li>
+        <li>Pre-scoped environment knowledge</li>
+        <li>Fixed monthly retainer rate</li>
+        <li>Quarterly tabletop exercises</li>
+        <li>Dedicated incident response lead</li>
+        <li>Legal & regulatory liaison support</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-cta reveal">
+    <h3>Under Attack Right Now?</h3>
+    <p>Call our emergency hotline immediately. Available 24 hours a day, 7 days a week, 365 days a year.</p>
+    <div class="cta-buttons">
+      <a href="tel:+254700000000" class="btn-red">🚨 Call Emergency Line</a>
+      <a href="services.html" class="btn-ghost">← Back to Services</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="../greyveil.html" class="footer-logo" style="display:inline-flex;align-items:center;text-decoration:none;"><svg width="140" height="32" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 2 L16 0 L16 11 C16 17 12 21 8 23 C4 21 0 17 0 11 L0 0 Z" fill="#070D10" stroke="#00FF7F" stroke-width="1"/>
+        <path d="M3 7 L3 16 L10 16 L10 12 L7 12" stroke="#00FF7F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="2" y1="9" x2="14" y2="9" stroke="#00E5FF" stroke-width="0.5" opacity="0.45"/>
+        <text x="22" y="15" font-family="Syne,sans-serif" font-weight="900" font-size="11" fill="#ffffff" letter-spacing="0.5">GREY<tspan fill="#00FF7F">VEIL</tspan></text>
+        <text x="23" y="26" font-family="DM Mono,monospace" font-size="6" fill="#00E5FF" letter-spacing="4">TECH</text>
+      </svg></a>
+  <div class="footer-text">© 2025 Greyveil Tech Ltd. Nairobi, Kenya.</div>
+  <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">LinkedIn</a></div>
+</footer>
+<script>
+  const reveals=document.querySelectorAll('.reveal');
+  const o=new IntersectionObserver(e=>{e.forEach(r=>{if(r.isIntersecting)r.target.classList.add('visible');});},{threshold:0.1});
+  reveals.forEach(r=>o.observe(r));
+
+  // ── NAV HIDE/SHOW ON SCROLL ──
+  (function() {
+    const nav = document.querySelector('nav');
+    let lastY = 0, ticking = false, hideTimer = null;
+
+    function handleScroll() {
+      const y = window.scrollY;
+      if (y > lastY && y > 80) {
+        nav.classList.add('nav-hidden');
+      } else {
+        nav.classList.remove('nav-hidden');
+      }
+      nav.classList.toggle('nav-scrolled', y > 10);
+      lastY = y;
+
+      // Show nav when scrolling stops
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        nav.classList.remove('nav-hidden');
+      }, 1200);
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => { handleScroll(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+
+  // ── MOBILE HAMBURGER ──
+  (function() {
+    const hamburger = document.querySelector('.hamburger');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    if (!hamburger || !mobileMenu) return;
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+
+    // Close on link click
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close on outside tap
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target === mobileMenu) {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+
+</script>
+</body>
+</html>
